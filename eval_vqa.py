@@ -9,7 +9,8 @@ from PIL import Image
 from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
-from datasets import load_dataset
+# from datasets import load_dataset
+from minigpt4.datasets.builders import load_dataset
 
 
 from minigpt4.datasets.datasets.vqa_datasets import OKVQAEvalData,VizWizEvalData,IconQAEvalData,GQAEvalData,VSREvalData,HMEvalData
@@ -20,6 +21,8 @@ from minigpt4.common.eval_utils import prepare_texts, init_model, eval_parser
 from minigpt4.conversation.conversation import CONV_VISION_minigptv2
 from minigpt4.common.config import Config
 
+os.environ["TRANSFORMERS_CACHE"] = "/leonardo_work/EUHPC_D25_055/jli/MiniGPT-4/ckpt"
+os.environ["TORCH_HOME"] = "/leonardo_work/EUHPC_D25_055/jli/MiniGPT-4/ckpt"
 
 def list_of_str(arg):
     return list(map(str, arg.split(',')))
@@ -36,7 +39,7 @@ conv_temp = CONV_VISION_minigptv2.copy()
 conv_temp.system = ""
 model.eval()
 save_path = cfg.run_cfg.save_path
-
+os.makedirs(save_path, exist_ok=True)
 
 if 'okvqa' in args.dataset:
 
@@ -45,7 +48,7 @@ if 'okvqa' in args.dataset:
     batch_size = cfg.evaluation_datasets_cfg["okvqa"]["batch_size"]
     max_new_tokens = cfg.evaluation_datasets_cfg["okvqa"]["max_new_tokens"]
     
-    print(eval_file_path)
+    print(eval_file_path)# '/path/to/eval/annotation/path/okvqa_test_split.json'
     evaluation_annntation_path = os.path.join(eval_file_path, "okvqa_test_split.json")
     with open(evaluation_annntation_path) as f:
         ok_vqa_test_split = json.load(f)
@@ -69,8 +72,10 @@ if 'okvqa' in args.dataset:
     with open(file_save_path,'w') as f:
         json.dump(minigpt4_predict, f)
 
-    annFile = os.path.join(eval_file_path,"mscoco_val2014_annotations_clean.json")
-    quesFile = os.path.join(eval_file_path,"OpenEnded_mscoco_val2014_questions_clean.json" )
+    # annFile = os.path.join(eval_file_path,"mscoco_val2014_annotations_clean.json")# -> JJ: can't find it!
+    # quesFile = os.path.join(eval_file_path,"OpenEnded_mscoco_val2014_questions_clean.json" )
+    annFile = os.path.join(eval_file_path,"mscoco_val2014_annotations.json")
+    quesFile = os.path.join(eval_file_path,"OpenEnded_mscoco_val2014_questions.json" )
 
     vqa = VQA(annFile, quesFile)
     vqaRes = vqa.loadRes(file_save_path, quesFile)
@@ -108,7 +113,7 @@ if 'vizwiz' in args.dataset:
                     count += 1
             acc = min(count/3.0, 1.0)
             total_acc.append(acc)
-        
+
     file_save_path = os.path.join(save_path, "vizwiz.json")
     with open(file_save_path,'w') as f:
         json.dump(minigpt4_predict, f)
@@ -165,9 +170,13 @@ if 'gqa' in args.dataset:
             result['pred'] = answer.lower().replace('<unk>','').strip()
             result['gt'] = label
             minigpt4_predict.append(result)
-            if answer.lower() == label:
+            # if answer.lower() == label:
+            if result['pred'] == label:
                 count+=1
             total+=1
+            # print("from_model:", result['pred'])
+            # print("gt:", result['gt'])
+            # print("----------------------------")
     print('gqa val:', count / total * 100, flush=True)
 
     file_save_path = os.path.join(save_path, "gqa.json")

@@ -5,7 +5,7 @@ model:
   end_sym: "###"
   low_resource: True
   prompt_template: '###Human: {} ###Assistant: '
-  ckpt: 'please set this value to the path of pretrained checkpoint'
+  ckpt: '/leonardo_work/EUHPC_D25_055/jli/MiniGPT-4/ckpt/minigpt4/prerained_minigpt4_7b.pth'
 
 
 datasets:
@@ -18,5 +18,26 @@ datasets:
       train:
         name: "blip_caption"
 
+evaluation_datasets:
+  okvqa:
+    eval_file_path: /leonardo_work/EUHPC_D25_055/jli/dataset/okvqa/annotations/
+    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/train2017/
+    max_new_tokens: 20
+    batch_size: 10
+  vizwiz:
+    eval_file_path: /leonardo_work/EUHPC_D25_055/jli/dataset/vizwiz/val.json
+    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/vizwiz/vizwiz_images/
+    max_new_tokens: 20
+    batch_size: 10
+  gqa:
+    eval_file_path: /leonardo_work/EUHPC_D25_055/jli/dataset/gqa/testdev_balanced_questions.json
+    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/gqa/gqa_images
+    max_new_tokens: 20
+    batch_size: 10
+
 run:
   task: image_text_pretrain
+  name: minigpt_evaluation
+#  save_path: ./benchmark_gpt/okvqa/
+#  save_path: ./benchmark_gpt/vizwiz/
+  save_path: ./benchmark_gpt/gqa/

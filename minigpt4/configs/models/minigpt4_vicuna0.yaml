@@ -15,7 +15,7 @@ model:
   # generation configs
   prompt: ""
 
-  llama_model: "please set this value to the path of vicuna model"
+  llama_model: /leonardo_work/EUHPC_D25_055/jli/MiniGPT-4/ckpt/vicuna-7b/
 
 preprocess:
     vis_processor:
