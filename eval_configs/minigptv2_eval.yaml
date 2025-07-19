@@ -4,8 +4,10 @@ model:
   max_txt_len: 500
   end_sym: "</s>"
   low_resource: True
-  prompt_template: '[INST] {} [/INST]'
-  ckpt: "please set this value to the path of pretrained checkpoint"
+#  prompt_template: '[INST] {} [/INST]'
+  prompt_template: '[INST] Given the image and the question, answer with only one word. {} [/INST]'
+  llama_model: '/leonardo_work/EUHPC_D25_055/jli/MiniGPT-4/ckpt/llama2-chat7b/'
+  ckpt: '/leonardo_work/EUHPC_D25_055/jli/MiniGPT-4/ckpt/gptv2/checkpoint_stage3.pth'
   lora_r: 64
   lora_alpha: 16
 
@@ -19,6 +21,27 @@ datasets:
     text_processor:
       train:
         name: "blip_caption"
+        
+evaluation_datasets:
+  okvqa:
+    eval_file_path: /leonardo_work/EUHPC_D25_055/jli/dataset/okvqa/annotations/
+    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/train2017/
+    max_new_tokens: 20
+    batch_size: 10
+  vizwiz:
+    eval_file_path: /leonardo_work/EUHPC_D25_055/jli/dataset/vizwiz/val.json
+    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/vizwiz/vizwiz_images/
+    max_new_tokens: 20
+    batch_size: 10
+  gqa:
+    eval_file_path: /leonardo_work/EUHPC_D25_055/jli/dataset/gqa/testdev_balanced_questions.json
+    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/gqa/gqa_images
+    max_new_tokens: 20
+    batch_size: 10
 
 run:
   task: image_text_pretrain
+  name: minigptv2_evaluation
+#  save_path: ./benchmark_gpt/okvqa/
+#  save_path: ./benchmark_gpt/vizwiz/
+  save_path: ./benchmark_gptv2/gqa/

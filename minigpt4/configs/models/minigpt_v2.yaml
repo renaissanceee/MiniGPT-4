@@ -11,7 +11,7 @@ model:
   # generation configs
   prompt: ""
 
-  llama_model: "please set this value to the path of llama2-chat-7b"
+  llama_model: /leonardo_work/EUHPC_D25_055/jli/MiniGPT-4/ckpt/llama2-chat7b/
   lora_r: 64
   lora_alpha: 16
 

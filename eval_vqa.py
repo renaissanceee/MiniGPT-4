@@ -113,6 +113,9 @@ if 'vizwiz' in args.dataset:
                     count += 1
             acc = min(count/3.0, 1.0)
             total_acc.append(acc)
+            print(f"pred: {answer}")
+            print(f"gt: {gt_answer}")
+            print(f"acc: {acc}")
 
     file_save_path = os.path.join(save_path, "vizwiz.json")
     with open(file_save_path,'w') as f:
@@ -174,9 +177,11 @@ if 'gqa' in args.dataset:
             if result['pred'] == label:
                 count+=1
             total+=1
-            # print("from_model:", result['pred'])
-            # print("gt:", result['gt'])
-            # print("----------------------------")
+            print("from_model:", result['pred'])
+            print("gt:", result['gt'])
+            print("----------------------------")
+        # break
+        print(f"right answers: {count}")
     print('gqa val:', count / total * 100, flush=True)
 
     file_save_path = os.path.join(save_path, "gqa.json")

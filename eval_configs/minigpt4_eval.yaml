@@ -31,7 +31,7 @@ evaluation_datasets:
     batch_size: 10
   gqa:
     eval_file_path: /leonardo_work/EUHPC_D25_055/jli/dataset/gqa/testdev_balanced_questions.json
-    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/gqa/gqa_images
+    img_path: /leonardo_work/EUHPC_D25_055/jli/dataset/gqa/gqa_images/
     max_new_tokens: 20
     batch_size: 10
 
